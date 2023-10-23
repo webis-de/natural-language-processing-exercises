@@ -1,24 +1,31 @@
 #!/usr/bin/env python3
 import argparse
+import json
 from sklearn.metrics import f1_score
 
-def read_txt_file(file_path: str) -> list:
+def read_jsonl_file(file_path: str) -> dict:
     """
-    reads the .txt file into a list
-    param file_path: path to the .txt file
-    return: list of values from the file
+    Reads the .jsonl file into a dictionary
+    param file_path: path to the .jsonl file
+    return: dictionary of UID to value from the file
     """
+    data = {}
     with open(file_path, 'r') as f:
-        return [int(line.strip()) for line in f.readlines()]
+        for line in f:
+            item = json.loads(line.strip())
+            data[item['uid']] = item['prediction']
+    return data
 
-def compute_f1_score(predictions: list, truth: list) -> float:
+def compute_f1_score(predictions: dict, truth: dict) -> float:
     """
-    Computes F1 score from the predictions and truth lists
-    param predictions: list of predicted values
-    param truth: list of ground truth values
+    Computes F1 score from the predictions and truth dictionaries
+    param predictions: dictionary of UUID to predicted value
+    param truth: dictionary of UUID to ground truth value
     return: computed F1 score
     """
-    return f1_score(truth, predictions, average='macro')
+    pred_list = [predictions[uuid] for uuid in sorted(predictions.keys())]
+    truth_list = [truth[uuid] for uuid in sorted(truth.keys())]
+    return f1_score(truth_list, pred_list, average='macro')
 
 def write_output(filename: str, k: str, v: float):
     """
@@ -34,18 +41,18 @@ def write_output(filename: str, k: str, v: float):
 
 def main():
     parser = argparse.ArgumentParser(description='Webpage classification | Evaluation: Compute F1 Score')
-    parser.add_argument("-p", "--predictions", help="path to the .txt file containing predictions", required=True)
-    parser.add_argument("-t", "--truth", help="path to the .txt file containing ground truth", required=True)
+    parser.add_argument("-p", "--predictions", help="path to the .jsonl file containing predictions", required=True)
+    parser.add_argument("-t", "--truth", help="path to the .jsonl file containing ground truth", required=True)
     parser.add_argument("-o", "--output", help="path to the file to write the results to", required=True)
     args = parser.parse_args()
 
-    # Read TXT files
-    predictions = read_txt_file(args.predictions)
-    truth = read_txt_file(args.truth)
+    # Read JSONL files
+    predictions = read_jsonl_file(args.predictions)
+    truth = read_jsonl_file(args.truth)
 
-    # Ensure lengths of both lists are equal
-    if len(predictions) != len(truth):
-        print("Error: Predictions and Truth files have different lengths.")
+    # Ensure both dictionaries have the same UUIDs
+    if set(predictions.keys()) != set(truth.keys()):
+        print("Error: Some UUIDs in the Predictions and Truth files don't match.")
         return
 
     # Compute F1 score
@@ -54,3 +61,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
