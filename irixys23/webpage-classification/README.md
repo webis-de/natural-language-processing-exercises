@@ -26,12 +26,13 @@ For more details, see the [code of the evaluator](evaluation).
 
 You can find the baselines and their code in the [baselines](baselines) directory.
 
-To run the trivial baseline that always predicts `Benign`, please run:
+To run the trivial baseline that always predicts `Benign`, please run (the `--evaluate true` flag indicates that the evaluator directly tests if the results of your submission are valid):
 
 ```
 tira-run \
-	--image webis/irixys23:trivial-baseline \
-	--input-dir example-data/input/ \
-	--command '/baseline.py -i $inputDataset/inputs.jsonl -o $outputDir/predictions.jsonl'
+  --input-dataset webpage-classification/tiny-sample-20231023-training \
+  --image webis/irixys23:trivial-baseline \
+  --evaluate true \
+  --command '/baseline.py -i $inputDataset/inputs.jsonl -o $outputDir/predictions.jsonl'
 ```
 
