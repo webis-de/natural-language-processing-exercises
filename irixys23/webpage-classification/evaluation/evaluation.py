@@ -3,7 +3,7 @@ import argparse
 import json
 from sklearn.metrics import f1_score
 
-def read_jsonl_file(file_path: str) -> dict:
+def read_jsonl_file(file_path: str, label_name: str) -> dict:
     """
     Reads the .jsonl file into a dictionary
     param file_path: path to the .jsonl file
@@ -13,7 +13,7 @@ def read_jsonl_file(file_path: str) -> dict:
     with open(file_path, 'r') as f:
         for line in f:
             item = json.loads(line.strip())
-            data[item['uid']] = item['prediction']
+            data[item['uid']] = item[label_name]
     return data
 
 def compute_f1_score(predictions: dict, truth: dict) -> float:
@@ -47,8 +47,8 @@ def main():
     args = parser.parse_args()
 
     # Read JSONL files
-    predictions = read_jsonl_file(args.predictions)
-    truth = read_jsonl_file(args.truth)
+    predictions = read_jsonl_file(args.predictions, 'prediction')
+    truth = read_jsonl_file(args.truth,  'label')
 
     # Ensure both dictionaries have the same UUIDs
     if set(predictions.keys()) != set(truth.keys()):
