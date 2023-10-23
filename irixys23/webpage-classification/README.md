@@ -4,8 +4,8 @@ The International Research & Innovation Centre on Digital Intelligent Systems (I
 
 ## Setup
 
-Please install `tira-run` and `Docker` on your machine.
-To install `tira-run`, please use `pip3 install tira-run`.
+Please install `python` (version 3.7 or newer),`tira-run` and `Docker` on your machine.
+To install `tira-run`, please use `pip3 install tira`.
 
 ## Running the Evaluator
 
