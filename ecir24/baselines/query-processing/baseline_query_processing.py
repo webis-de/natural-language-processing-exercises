@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # The expected output directory, injected via the environment variable TIRA_OUTPUT_DIRECTORY
     output_dir = get_output_directory('.')
     
-    # Query processors persist there results in a file queries.jsonl in the output directory.
+    # Query processors persist their results in a file queries.jsonl in the output directory.
     output_file = Path(output_dir) / 'queries.jsonl'
     
     # You can pass as many additional arguments to your program, e.g., via argparse, to modify the behaviour
