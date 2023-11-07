@@ -10,4 +10,5 @@ Important links/resources:
 - [Baselines for software submissions](https://github.com/OpenWebSearch/wows-code/tree/main/ecir24/baselines)
 - [Jupyter notebooks showcasing already submitted components in declarative PyTerrier pipelines](https://github.com/OpenWebSearch/wows-code/tree/main/ecir24/post-hoc-notebooks)
 
-If you have any questions or problems, please do not hesitate to contact us via [the forum](https://www.tira.io/t/the-forum-for-the-1st-international-workshop-on-open-web-search-wows2024/2021/1) or mail.
+If you have any questions or problems, please do not hesitate to contact us via [the forum](https://www.tira.io/t/the-forum-for-the-1st-international-workshop-on-open-web-search-wows2024) or via mail.
+
