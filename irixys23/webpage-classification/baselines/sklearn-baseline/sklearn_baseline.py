@@ -24,7 +24,8 @@ def load_data(file_path):
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Webpage classification with sklearn pipeline')
-    parser.add_argument("-d", "--data_dir", help="Path to the directory containing the data subfolders.", required=True)
+    parser.add_argument("-i", "--input_data", help="Path to the jsonl file for which predictions should be made.", required=True)
+    parser.add_argument("-m", "--model", help="The sklearn SGDClassifier model to use for the predictions.", required=True)
     parser.add_argument("-o", "--output", help="Path to the directory to write the results to.", required=True)
     return parser.parse_args()
 
@@ -33,42 +34,31 @@ def preprocess(content):
     # You might want to add actual preprocessing logic here
     return content
 
-def main(data_dir, output_dir):
+def load_model(model_file):
+    return SGDClassifier()# TODO: Load model here
+
+def main(input_file, output_dir, model_file):
     # Load datasets
-    train_data = load_data(os.path.join(data_dir, 'train/D1_train.jsonl'))
-    train_labels = load_data(os.path.join(data_dir, 'train/D1_train-truth.jsonl'))['label']
-
-    validation_data = load_data(os.path.join(data_dir, 'validation/D1_validation.jsonl'))
-    validation_labels = load_data(os.path.join(data_dir, 'validation/D1_validation-truth.jsonl'))['label']
-
-    test_data = load_data(os.path.join(data_dir, 'test/D1_test.jsonl'))
+    test_data = load_data(input_file)
 
     # Preprocess the content
-    train_data['url'] = train_data['url'].apply(preprocess)
-    validation_data['url'] = validation_data['url'].apply(preprocess)
     test_data['url'] = test_data['url'].apply(preprocess)
 
     # Feature extraction and classifier pipeline
+    
     pipeline = Pipeline([
         ('tfidf', TfidfVectorizer()),
-        ('clf', SGDClassifier())
+        ('clf', load_model(model_file))
     ])
-
-    # Train the model
-    pipeline.fit(train_data['url'], train_labels)
-
-    # Validate the model
-    validation_predictions = pipeline.predict(validation_data['url'])
-    print(classification_report(validation_labels, validation_predictions))
 
     # Make predictions on the test data
     test_predictions = pipeline.predict(test_data['url'])
 
     # Save the predictions
     test_data['label'] = test_predictions
-    output_path = os.path.join(output_dir, 'test_predictions.jsonl')
+    output_path = os.path.join(output_dir, 'predictions.jsonl')
     test_data[['uid', 'label']].to_json(output_path, orient='records', lines=True)
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.data_dir, args.output)
+    main(args.data_dir, args.output, args.model)
