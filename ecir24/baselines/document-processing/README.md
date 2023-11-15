@@ -11,7 +11,16 @@ tira-run \
 	--command 'python3 /code/baseline_document_processing.py'
 ```
 
+## Development
+
+You can build the Docker image via:
+
 ```
 docker build -t mam10eks/wows-baselines:doc-processor-0.0.1 .
 ```
 
+To publish the image to dockerhub, run:
+
+```
+docker push mam10eks/wows-baselines:doc-processor-0.0.1
+```
