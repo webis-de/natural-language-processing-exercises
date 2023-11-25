@@ -17,13 +17,19 @@ def main(input_file, output_file, ir_datasets_id):
     dataset = ir_datasets.load(ir_datasets_id)
     docs_store = dataset.docs_store()
 
-    with open(input_file, 'r') as inp:
+    os.mkdir(output_file)
+    os.mkdir(output_file + '/input')
+    os.mkdir(output_file + '/truth')
+    with open(input_file, 'r') as inp, open(output_file + '/input/inputs.jsonl', 'w+') as resulting_input, open(output_file + '/truth/truths.jsonl', 'w+') as resulting_truth:
+
         for line in tqdm(inp):
             spam_rank, doc_id = line.strip().split(' ')
             # From the spam rank documentation: percentile-score<70 is spam, and the rest non-spam.
             label = 'Benign' if int(spam_rank) >= 70 else 'Malicious'
 
-            docs_store.get(doc_id)
+            resulting_truth.write(json.dumps({"uid": doc_id, "label": label}) + '\n')
+            resulting_input.write(json.dumps({"uid": doc_id, "url": doc.url, "html": doc.body.decode('UTF-8')}) + '\n')
+
 
 if __name__ == '__main__':
     args = parse_args()
