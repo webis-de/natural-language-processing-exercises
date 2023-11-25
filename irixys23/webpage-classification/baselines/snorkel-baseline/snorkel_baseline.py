@@ -55,8 +55,8 @@ def main(input_data, model_path, output_file):
     test_predictions_mapped = [label_names.get(label, 'Unknown') for label in test_predictions]
 
     # Save the predictions
-    test_data['label'] = test_predictions_mapped
-    test_data[['uid', 'label']].to_json(output_file, orient='records', lines=True)
+    test_data['prediction'] = test_predictions_mapped
+    test_data[['uid', 'prediction']].to_json(output_file, orient='records', lines=True)
 
 if __name__ == "__main__":
     args = parse_args()

@@ -34,9 +34,9 @@ def main(input_file, output_dir, model_file):
     test_predictions = pipeline.predict(test_data['url'])
 
     # Save the predictions
-    test_data['label'] = test_predictions
+    test_data['prediction'] = test_predictions
     output_path = os.path.join(output_dir, 'predictions.jsonl')
-    test_data[['uid', 'label']].to_json(output_path, orient='records', lines=True)
+    test_data[['uid', 'prediction']].to_json(output_path, orient='records', lines=True)
 
 if __name__ == "__main__":
     args = parse_args()
