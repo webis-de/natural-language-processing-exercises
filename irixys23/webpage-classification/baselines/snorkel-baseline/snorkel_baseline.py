@@ -5,7 +5,7 @@ import pandas as pd
 import joblib
 import os
 import numpy as np
-from snorkel_baseline_train import label_names, ABSTAIN, BENIGN, MALICIOUS, ADULT, get_snorkel_pandas_lf_applier
+from snorkel_baseline_train import label_names, ABSTAIN, BENIGN, MALICIOUS, ADULT, get_snorkel_pandas_lf_applier, load_data
 
 
 def predict_with_tie_break(label_model, L, tie_break_label=BENIGN):
@@ -29,20 +29,6 @@ def predict_with_tie_break(label_model, L, tie_break_label=BENIGN):
             predictions[i] = np.argmax(prob)
 
     return predictions
-
-def load_data(file_path):
-    with jsonlines.open(file_path) as reader:
-        for obj in reader:
-            obj_keys = obj.keys()
-            break
-    
-    data = {k: [] for k in obj_keys}
-    
-    with jsonlines.open(file_path) as reader:
-        for obj in reader:
-            for k in obj_keys:
-                data[k].append(obj[k])
-    return pd.DataFrame(data)
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Make predictions using a trained Snorkel labeling model')
