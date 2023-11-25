@@ -27,7 +27,7 @@ def main(input_file, output_file, ir_datasets_id):
             spam_rank, doc_id = line.strip().split(' ')
             # From the spam rank documentation: percentile-score<70 is spam, and the rest non-spam.
             label = 'Benign' if int(spam_rank) >= 70 else 'Malicious'
-
+            doc = docs_store.get(doc_id)
             resulting_truth.write(json.dumps({"uid": doc_id, "label": label}) + '\n')
             resulting_input.write(json.dumps({"uid": doc_id, "url": doc.url, "html": doc.body.decode('UTF-8')}) + '\n')
 
