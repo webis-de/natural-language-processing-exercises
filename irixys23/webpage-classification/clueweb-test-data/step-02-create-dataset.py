@@ -14,6 +14,13 @@ def parse_args():
     parser.add_argument("--dataset-id", help="The id of the ir_dataset.", required=True, choices=['clueweb09', 'clueweb12'])
     return parser.parse_args()
 
+def decode(body):
+    encoding = chardet.detect(body)['encoding']
+    if encoding:
+        return body.encode(encoding)
+
+    
+    return body.encode()
 
 def main(input_file, output_file, ir_datasets_id):
     dataset = ir_datasets.load(ir_datasets_id)
@@ -29,9 +36,8 @@ def main(input_file, output_file, ir_datasets_id):
             # From the spam rank documentation: percentile-score<70 is spam, and the rest non-spam.
             label = 'Benign' if int(spam_rank) >= 70 else 'Malicious'
             doc = docs_store.get(doc_id)
-            encoding = chardet.detect(doc.body)['encoding']
             resulting_truth.write(json.dumps({"uid": doc_id, "label": label}) + '\n')
-            resulting_input.write(json.dumps({"uid": doc_id, "url": doc.url, "html": doc.body.decode(encoding)}) + '\n')
+            resulting_input.write(json.dumps({"uid": doc_id, "url": doc.url, "html": decode(doc.body)}) + '\n')
 
 
 if __name__ == '__main__':
