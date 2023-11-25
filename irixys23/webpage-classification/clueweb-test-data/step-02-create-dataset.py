@@ -17,10 +17,10 @@ def parse_args():
 def decode(body):
     encoding = chardet.detect(body)['encoding']
     if encoding:
-        return body.decode(encoding)
+        return body.decode(encoding, errors='replace').replace('\uFFFD', '?')
 
     
-    return body.decode()
+    return body.decode(errors='replace').replace('\uFFFD', '?')
 
 def main(input_file, output_file, ir_datasets_id):
     dataset = ir_datasets.load(ir_datasets_id)
