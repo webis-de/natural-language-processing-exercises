@@ -3,7 +3,7 @@ import argparse
 import json
 from sklearn.metrics import f1_score
 
-def read_jsonl_file(file_path: str, label_name: str) -> dict:
+def read_jsonl_file(file_path: str, label_name: str, label_mapping: dict=None) -> dict:
     """
     Reads the .jsonl file into a dictionary
     param file_path: path to the .jsonl file
@@ -13,7 +13,12 @@ def read_jsonl_file(file_path: str, label_name: str) -> dict:
     with open(file_path, 'r') as f:
         for line in f:
             item = json.loads(line.strip())
-            data[item['uid']] = item[label_name]
+            label = item[label_name]
+
+            if label_mapping:
+                label = label_mapping[label]
+
+            data[item['uid']] = label
     return data
 
 def compute_f1_score(predictions: dict, truth: dict) -> float:
@@ -44,11 +49,16 @@ def main():
     parser.add_argument("-p", "--predictions", help="path to the .jsonl file containing predictions", required=True)
     parser.add_argument("-t", "--truth", help="path to the .jsonl file containing ground truth", required=True)
     parser.add_argument("-o", "--output", help="path to the file to write the results to", required=True)
+    parser.add_argument("--evaluate-on-clueweb", action='store_true', help='Is the evaluation on the clueweb? (I.e., only two labels, Benign and Malicious)', required=False)
     args = parser.parse_args()
 
+    label_mapping = None
+    if args.evaluate_on_clueweb:
+        label_mapping = {"Benign": "Benign", "Malicious": "Malicious", "Adult": "Malicious"}
+
     # Read JSONL files
-    predictions = read_jsonl_file(args.predictions, 'prediction')
-    truth = read_jsonl_file(args.truth,  'label')
+    predictions = read_jsonl_file(args.predictions, 'prediction', label_mapping)
+    truth = read_jsonl_file(args.truth,  'label', label_mapping)
 
     # Ensure both dictionaries have the same UUIDs
     if set(predictions.keys()) != set(truth.keys()):
