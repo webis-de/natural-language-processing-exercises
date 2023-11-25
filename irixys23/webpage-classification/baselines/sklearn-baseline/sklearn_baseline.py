@@ -1,27 +1,12 @@
 #!/usr/bin/env python3
 import argparse
-import jsonlines
-import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report
 import os
 import joblib
-
-def load_data(file_path):
-    with jsonlines.open(file_path) as reader:
-        for obj in reader:
-            obj_keys = obj.keys()
-            break
-    
-    data = {k: [] for k in obj_keys}
-    
-    with jsonlines.open(file_path) as reader:
-        for obj in reader:
-            for k in obj_keys:
-                data[k].append(obj[k])
-    return pd.DataFrame(data)
+from sklearn_baseline_train import load_data, preprocess
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Webpage classification with sklearn pipeline')
@@ -29,12 +14,6 @@ def parse_args():
     parser.add_argument("-m", "--model", help="The sklearn SGDClassifier model to use for the predictions.", required=True)
     parser.add_argument("-o", "--output", help="Path to the directory to write the results to.", required=True)
     return parser.parse_args()
-
-def preprocess(content):
-    # Placeholder for the content preprocessing
-    # You might want to add actual preprocessing logic here
-    return content
-
 
 def load_model(model_file):
     # Load the trained model

@@ -13,6 +13,8 @@ BENIGN = 0
 MALICIOUS = 1
 ADULT = 2
 
+# Label mapping from numeric to string
+label_names = {BENIGN: 'Benign', MALICIOUS: 'Malicious', ADULT: 'Adult'}
 
 def lf_educational_government_domains(row):
     edu_gov_domains = ['.edu', '.gov']
@@ -219,7 +221,6 @@ def lf_uncommon_tld(row):
         return MALICIOUS
     return ABSTAIN
 
-
 def load_data(file_path):
     with jsonlines.open(file_path) as reader:
         for obj in reader:
@@ -234,6 +235,20 @@ def load_data(file_path):
                 data[k].append(obj[k])
     return pd.DataFrame(data)
 
+def get_snorkel_pandas_lf_applier():
+    lfs = [lf_educational_government_domains, lf_news_websites, lf_health_related, 
+           lf_educational_content, lf_tech_companies, lf_family_kids_related,
+           lf_cultural_artistic_content, lf_major_retailers, lf_government_services,
+           lf_sports_recreation, lf_explicit_adult_keywords, lf_age_restriction, lf_adult_industry_domains, 
+           lf_adult_url_structure, lf_euphemisms_for_adult, lf_common_adult_content_keywords,
+           lf_sexual_innuendos, lf_adult_product_references, lf_explicit_usernames, lf_adult_forums_chatrooms, 
+           lf_common_benign_domains, lf_malicious_keywords, lf_adult_keywords,
+           lf_shortened_url, lf_long_url, lf_non_standard_port, lf_https_protocol, 
+           lf_numerical_url, lf_suspicious_subdomain, lf_uncommon_tld
+          ]
+
+    return PandasLFApplier(lfs=[LabelingFunction(name=func.__name__, f=func) for func in lfs])
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a Snorkel labeling model')
     parser.add_argument("-d", "--data_dir", help="Path to the directory containing the data subfolders.", required=True)
@@ -244,25 +259,8 @@ def main(data_dir, model_output):
     # Load datasets
     train_data = load_data(os.path.join(data_dir, 'train/D1_train.jsonl'))
 
-    # Define labeling functions
-    original_lfs = [ lf_educational_government_domains, lf_news_websites, lf_health_related, 
-            lf_educational_content, lf_tech_companies, lf_family_kids_related,
-            lf_cultural_artistic_content, lf_major_retailers, lf_government_services,
-            lf_sports_recreation, lf_explicit_adult_keywords, lf_age_restriction, lf_adult_industry_domains, 
-            lf_adult_url_structure, lf_euphemisms_for_adult, lf_common_adult_content_keywords,
-            lf_sexual_innuendos, lf_adult_product_references, lf_explicit_usernames, lf_adult_forums_chatrooms, 
-            lf_common_benign_domains, lf_malicious_keywords, lf_adult_keywords,
-            lf_shortened_url, lf_long_url, lf_non_standard_port, lf_https_protocol, 
-            lf_numerical_url, lf_suspicious_subdomain, lf_uncommon_tld
-          ] # Add all your labeling functions here
-
-    # Create LabelingFunction instances dynamically
-    lfs = [
-        LabelingFunction(name=func.__name__, f=func)
-        for func in original_lfs
-    ]
     # Apply the labeling functions to the datasets
-    applier = PandasLFApplier(lfs=lfs)
+    applier = get_snorkel_pandas_lf_applier()
     L_train = applier.apply(df=train_data)
     
     # Train the label model
