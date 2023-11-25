@@ -2,10 +2,10 @@
 import argparse
 import jsonlines
 import pandas as pd
-import joblib
+from snorkel.labeling import LabelingFunction, PandasLFApplier, LFAnalysis
+from snorkel.labeling.model import LabelModel
 import os
-import numpy as np
-from snorkel.labeling import LabelingFunction, PandasLFApplier
+import joblib
 
 # Constants for the labels
 ABSTAIN = -1
@@ -13,8 +13,6 @@ BENIGN = 0
 MALICIOUS = 1
 ADULT = 2
 
-# Label mapping from numeric to string
-label_names = {BENIGN: 'Benign', MALICIOUS: 'Malicious', ADULT: 'Adult'}
 
 def lf_educational_government_domains(row):
     edu_gov_domains = ['.edu', '.gov']
@@ -221,27 +219,6 @@ def lf_uncommon_tld(row):
         return MALICIOUS
     return ABSTAIN
 
-def predict_with_tie_break(label_model, L, tie_break_label=BENIGN):
-    # Get the probabilistic predictions
-    probas = label_model.predict_proba(L)
-
-    # Initialize an array to store the final predictions
-    predictions = -1 * np.ones(L.shape[0])
-
-    # Iterate over each item
-    for i, prob in enumerate(probas):
-        # Find the maximum probability
-        max_prob = max(prob)
-
-        # Check if there's a tie
-        if (prob == max_prob).sum() > 1:
-            # If there's a tie, predict BENIGN
-            predictions[i] = tie_break_label
-        else:
-            # Otherwise, choose the label with the highest probability
-            predictions[i] = np.argmax(prob)
-
-    return predictions
 
 def load_data(file_path):
     with jsonlines.open(file_path) as reader:
@@ -258,15 +235,14 @@ def load_data(file_path):
     return pd.DataFrame(data)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Make predictions using a trained Snorkel labeling model')
-    parser.add_argument("-i", "--input_data", help="Path to the JSONL file for making predictions.", required=True)
-    parser.add_argument("-m", "--model", help="Path to the trained model.", required=True)
-    parser.add_argument("-o", "--output", help="Path to save the predictions.", required=True)
+    parser = argparse.ArgumentParser(description='Train a Snorkel labeling model')
+    parser.add_argument("-d", "--data_dir", help="Path to the directory containing the data subfolders.", required=True)
+    parser.add_argument("-m", "--model_output", help="Path to save the trained model.", required=True)
     return parser.parse_args()
 
-def main(input_data, model_path, output_file):
-    # Load the test data
-    test_data = load_data(input_data)
+def main(data_dir, model_output):
+    # Load datasets
+    train_data = load_data(os.path.join(data_dir, 'train/D1_train.jsonl'))
 
     # Define labeling functions
     original_lfs = [ lf_educational_government_domains, lf_news_websites, lf_health_related, 
@@ -285,24 +261,17 @@ def main(input_data, model_path, output_file):
         LabelingFunction(name=func.__name__, f=func)
         for func in original_lfs
     ]
-
-    # Apply the labeling functions to the test dataset
+    # Apply the labeling functions to the datasets
     applier = PandasLFApplier(lfs=lfs)
-    L_test = applier.apply(df=test_data)
+    L_train = applier.apply(df=train_data)
+    
+    # Train the label model
+    label_model = LabelModel(cardinality=3, verbose=True)
+    label_model.fit(L_train, n_epochs=1000, log_freq=100, seed=123)
 
-    # Load the trained label model
-    label_model = joblib.load(model_path)
-
-    # Use the custom prediction function with tie-break handling
-    test_predictions = predict_with_tie_break(label_model, L_test)
-
-    # Map numeric labels to string labels
-    test_predictions_mapped = [label_names.get(label, 'Unknown') for label in test_predictions]
-
-    # Save the predictions
-    test_data['label'] = test_predictions_mapped
-    test_data[['uid', 'label']].to_json(output_file, orient='records', lines=True)
+    # Save the trained label model
+    joblib.dump(label_model, model_output)
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.input_data, args.model, args.output)
+    main(args.data_dir, args.model_output)
