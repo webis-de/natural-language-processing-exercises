@@ -17,7 +17,7 @@ def parse_args():
 def decode(body):
     encoding = chardet.detect(body)['encoding']
     if encoding:
-        return body.encode(encoding)
+        return body.decode(encoding)
 
     
     return body.encode()
