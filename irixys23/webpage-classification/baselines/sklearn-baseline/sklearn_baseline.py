@@ -7,6 +7,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report
 import os
+import joblib
 
 def load_data(file_path):
     with jsonlines.open(file_path) as reader:
@@ -34,8 +35,11 @@ def preprocess(content):
     # You might want to add actual preprocessing logic here
     return content
 
+
 def load_model(model_file):
-    return SGDClassifier()# TODO: Load model here
+    # Load the trained model
+    pipeline = joblib.load(model_file)
+    return pipeline
 
 def main(input_file, output_dir, model_file):
     # Load datasets
@@ -45,12 +49,8 @@ def main(input_file, output_dir, model_file):
     test_data['url'] = test_data['url'].apply(preprocess)
 
     # Feature extraction and classifier pipeline
+    pipeline = load_model(model_file)
     
-    pipeline = Pipeline([
-        ('tfidf', TfidfVectorizer()),
-        ('clf', load_model(model_file))
-    ])
-
     # Make predictions on the test data
     test_predictions = pipeline.predict(test_data['url'])
 
@@ -61,4 +61,4 @@ def main(input_file, output_dir, model_file):
 
 if __name__ == "__main__":
     args = parse_args()
-    main(args.data_dir, args.output, args.model)
+    main(args.input_data, args.output, args.model)
