@@ -20,7 +20,7 @@ def decode(body):
         return body.decode(encoding)
 
     
-    return body.encode()
+    return body.decode()
 
 def main(input_file, output_file, ir_datasets_id):
     dataset = ir_datasets.load(ir_datasets_id)
