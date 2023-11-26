@@ -9,7 +9,7 @@ RUN pip3 install -r /requirements.txt \
 
 ENV PYTHONPATH=/app
 
-ADD snorkel_baseline.py  snorkel_baseline_train.py  snrkl_model.pkl /app/
+ADD * /app/
 
 ENTRYPOINT [ "python3", "/app/snorkel_baseline.py", "-i", "$inputDataset/inputs.jsonl", "-o", "$outputDir/predictions.jsonl", "-m", "/app/snrkl_model.pkl" ]
 
