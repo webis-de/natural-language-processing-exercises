@@ -7,7 +7,7 @@ The International Research & Innovation Centre on Digital Intelligent Systems (I
 The internet is full of fascinating web pages, but also flooded with spam content. In this task, we want to encourage the teams to separate the righteous from the wicked by applying state-of-the-art ML & NLP techniques. You will work with comprehensive [training and validation datasets](https://doi.org/10.5281/zenodo.10118828) containing URLs and content of benign, malicious and adult pages. The task is therefore to create an accurate Classification model. Note that it is recommended, but not required to use the programming language Python. The concrete software framework, e.g. scikit-learn, snorkel, or transformers, is up to your choice. We particularly encourage the teams to try [snorkel](https://www.snorkel.org/), as its intuitive and rule-based approach on creating Machine Learning models seems promising to achieve good and reproducible results in short time. The teams will use the [TIRA platform](https://github.com/tira-io/tira) for submitting their software solutions and compete with each other on a shared TIRA leaderboard.
 
 
-## Getting Starteg: Step-By-Step Guide
+## Getting Started: Step-By-Step Guide
 
 **Step 1**: Use your TIRA invitation link to register on TIRA (your account will be already configured correctly)
 
