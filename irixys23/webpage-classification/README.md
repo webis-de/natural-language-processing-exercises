@@ -9,6 +9,8 @@ The internet is full of fascinating web pages, but also flooded with spam conten
 
 ## Getting Started: Step-By-Step Guide
 
+We also have a [12 minute screencast](https://cloud.uni-jena.de/s/6cbsJsWxfJFX4Wi) that shows the steps below in a video.
+
 **Step 1**: Use your TIRA invitation link to register on TIRA (your account will be already configured correctly)
 
 **Step 2**: Go to the [submission page in TIRA](https://www.tira.io/task-overview/webpage-classification) and click on "Submit"
