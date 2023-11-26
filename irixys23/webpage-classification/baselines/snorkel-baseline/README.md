@@ -17,5 +17,3 @@ tira-run --image webis/irixys23:snorkel-baseline --input-dataset webpage-classif
 docker build -t webis/irixys23:snorkel-baseline .
 docker push webis/irixys23:snorkel-baseline
 ```
-
-python3 /app/sklearn_baseline.py -i $inputDataset/inputs.jsonl -o $outputDir -m /app/sk_model.pkl
