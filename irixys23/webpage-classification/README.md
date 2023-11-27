@@ -33,9 +33,14 @@ The training and validation dataset is available on [Zenodo](https://doi.org/10.
 
 ## Submission with TIRA
 
+### Notes
+
+- The submission deadline is **29th of November 2023, 12:30 CET**.
+- The leaderboard will be unblinded after the submission deadline.
+
 ### Setup
 
-Please install `python` (version 3.7 or newer),`tira-run` and `Docker` on your machine.
+Please install `python` (version 3.7 or newer), `tira-run` and `Docker` on your machine.
 To install `tira-run`, please use `pip3 install tira`.
 
 ### Running the Evaluator
