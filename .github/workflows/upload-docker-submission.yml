@@ -58,5 +58,5 @@ jobs:
           	>> $GITHUB_ENV 
       - name: Build, test, and upload image
         run: |
-          docker build -t ${{ env.IMAGE_TAG }} -f ${{ github.workspace }}/${{ inputs.dockerpath }}
+          docker build -t ${{ env.IMAGE_TAG }} ${{ github.workspace }}/${{ inputs.dockerpath }}
           tira-run --input-dataset workshop-on-open-web-search/document-processing-20231027-training --image ${{ env.IMAGE_TAG }} --push true
