@@ -1,5 +1,5 @@
 {
-  "image": "mam10eks/tira-for-school:0.0.1",
+  "image": "webis/wows-2024-baseline:0.0.1",
   "customizations": {
     "vscode": {
       "extensions": ["ms-python.python", "ms-python.vscode-pylance", "ms-toolsai.jupyter"]
