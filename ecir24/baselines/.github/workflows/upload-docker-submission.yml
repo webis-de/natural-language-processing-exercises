@@ -1,0 +1,62 @@
+name: Upload Docker Software to TIRA
+on: 
+  workflow_dispatch:
+    inputs:
+      dockerpath:
+        description: The path to the directory where the Docker image should be build. Should contain a Dockerfile that specifies everything.
+        required: true
+        default: query-processing
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: registry.webis.de
+          username: ${{ secrets.TIRA_DOCKER_REGISTRY_USER }}
+          password: ${{ secrets.TIRA_DOCKER_REGISTRY_TOKEN }}
+      -
+        name: Set up Dependencies
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      -
+        name: Install required python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install tira==0.0.100
+      -
+        name: Set environment variables
+        env:
+          TIRA_TASK_ID: TIRA_TASK_ID_FOR_AUTOMATIC_REPLACEMENT
+          TIRA_VM_ID: TIRA_USER_FOR_AUTOMATIC_REPLACEMENT
+        run: |
+          tira-run --export-submission-environment \
+          	GITHUB_SHA=${{ github.sha }} \
+          	TIRA_VM_ID=${{ env.TIRA_VM_ID }} \
+          	TIRA_TASK_ID=${{ env.TIRA_TASK_ID }} \
+          	TIRA_DOCKER_REGISTRY_TOKEN=${{ secrets.TIRA_DOCKER_REGISTRY_TOKEN }} \
+          	TIRA_DOCKER_REGISTRY_USER=${{ secrets.TIRA_DOCKER_REGISTRY_USER }} \
+          	TIRA_CLIENT_TOKEN=${{ secrets.TIRA_CLIENT_TOKEN }} \
+          	TIRA_CLIENT_USER=${{ secrets.TIRA_CLIENT_USER }} \
+          	TIRA_CODE_REPOSITORY_ID=${{ secrets.TIRA_CODE_REPOSITORY_ID }} \
+          	TIRA_DOCKER_FILE=${{ inputs.dockerfile }}/Dockerfile \
+          	TIRA_DOCKER_PATH=${{ inputs.dockerpath }}
+          	>> $GITHUB_ENV 
+      - name: Build, test, and upload image
+        run: |
+          docker build -t ${{ env.IMAGE_TAG }} -f ${{ github.workspace }}/${{ inputs.dockerpath }}
+          tira-run --input-dataset workshop-on-open-web-search/document-processing-20231027-training --image ${{ env.IMAGE_TAG }} --push true
