@@ -54,7 +54,7 @@ jobs:
           	TIRA_CLIENT_USER=${{ secrets.TIRA_CLIENT_USER }} \
           	TIRA_CODE_REPOSITORY_ID=${{ secrets.TIRA_CODE_REPOSITORY_ID }} \
           	TIRA_DOCKER_FILE=${{ inputs.dockerfile }}/Dockerfile \
-          	TIRA_DOCKER_PATH=${{ inputs.dockerpath }}
+          	TIRA_DOCKER_PATH=${{ inputs.dockerpath }} \
           	>> $GITHUB_ENV 
       - name: Build, test, and upload image
         run: |
