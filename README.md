@@ -1,5 +1,7 @@
 # Submissions of TIRA_USER_FOR_AUTOMATIC_REPLACEMENT
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/webis-de/natural-language-processing-exercises)
+
 This repository contains baseline submissions (document-processing, query-processing, re-ranking, and retrieval) together with a Github action and a development container configuration as starting point for submissions for the [](). 
 
 We recommend that you work either in Github Codespaces or using [dev containers with Docker](https://code.visualstudio.com/docs/devcontainers/containers). Github Codespaces are an easy option to start in a few minutes (free tier of 130 compute hours per month), whereas dev container with Docker might be interesting if you want to put a bit more focus on technical/deployment details.
