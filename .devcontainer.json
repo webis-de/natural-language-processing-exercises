@@ -1,5 +1,5 @@
 {
-  "image": "fschlatt/natural-language-processing:0.0.1",
+  "image": "fschlatt/natural-language-processing-exercises:0.0.1",
   "customizations": {
     "vscode": {
       "extensions": [
