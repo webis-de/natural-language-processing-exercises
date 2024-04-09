@@ -37,7 +37,7 @@ jobs:
         name: Install required python packages
         run: |
           python -m pip install --upgrade pip
-          pip install tira==0.0.100
+          pip install tira==0.0.116
       -
         name: Set environment variables
         env:
@@ -59,4 +59,4 @@ jobs:
       - name: Build, test, and upload image
         run: |
           docker build -t ${{ env.IMAGE_TAG }} ${{ github.workspace }}/${{ inputs.dockerpath }}
-          tira-run --input-dataset workshop-on-open-web-search/document-processing-20231027-training --image ${{ env.IMAGE_TAG }} --push true
+          tira-run --input-dataset nlpbuw-fsu-sose-24/authorship-verification-train-20240408-training --image ${{ env.IMAGE_TAG }} --push true --fail-if-output-is-empty
