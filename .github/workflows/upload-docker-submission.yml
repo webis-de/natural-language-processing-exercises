@@ -5,7 +5,12 @@ on:
       dockerpath:
         description: The path to the directory where the Docker image should be build. Should contain a Dockerfile that specifies everything.
         required: true
-        default: query-processing
+        default: authorship-verification-trivial
+      dataset:
+        type: choice
+        description: Dataset.
+        options:
+        - authorship-verification-train-20240408-training
 
 jobs:
   docker-build:
