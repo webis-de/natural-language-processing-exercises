@@ -26,7 +26,7 @@ To develop with dev containers, please:
 If you do not want to use VS Code, you can start and develop in a jupyter notebook via (please execute the command within the `jupyter-notebook-submissions` directory):
 
 ```
-docker run --rm  -it -p 8888:8888 --entrypoint jupyter -w /workspace -v ${PWD}:/workspace webis/ir-lab-wise-2023:0.0.1 notebook --allow-root --ip 0.0.0.0
+docker run --rm  -it -p 8888:8888 --entrypoint jupyter -w /workspace -v ${PWD}:/workspace fschlatt/natural-language-processing-exercises notebook --allow-root --ip 0.0.0.0
 ```
 
 ## Submitting Your Software
