@@ -1,19 +1,28 @@
 # Submissions of TIRA_USER_FOR_AUTOMATIC_REPLACEMENT
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/webis-de/natural-language-processing-exercises)
-
 This repository contains baseline submissions (document-processing, query-processing, re-ranking, and retrieval) together with a Github action and a development container configuration as starting point for submissions for the [](). 
 
 We recommend that you work either in Github Codespaces or using [dev containers with Docker](https://code.visualstudio.com/docs/devcontainers/containers). Github Codespaces are an easy option to start in a few minutes (free tier of 130 compute hours per month), whereas dev container with Docker might be interesting if you want to put a bit more focus on technical/deployment details.
 
+## Repository Structure
 
-## Developing in Github Codespaces
+Each submission to a task should be self-contained in a directory within this repository. See the `authorship-verification-trivial` directory for an example. We have added an authorship-verification-submission directory for you to start developing your submission for the first task.
 
-- Open this repository in Github Codespaces (i.e., click on "Code" -> "Codespaces" -> "Create ...").
-- Please do not forget to commit often
+The `authorship-verification-trivial` example contains a single python file `authorship_verification_trivial.py` that loads the data and makes a prediction. TIRA handles loading the input datasets and saving the predictions into the correct location. The example also contains a `Dockerfile` that specifies how your submission is built and run when submitted to TIRA. In the simple example, it adds the python file to the container and runs it. Anything your submission needs (e.g., a saved model or other persited data) to run should be added to the `Dockerfile`.
 
+A self-contained submission can then be submitted to TIRA using GitHub actions. See the [Submitting Your Software](#submitting-your-software) section for more details.
 
-## Developing in Dev Containers
+## Developing your Software Submission
+
+You have two options for developing your submission. Either you can develop remotely in Github Codespaces or locally in a dev container.
+
+### Developing in Github Codespaces
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/webis-de/natural-language-processing-exercises)
+
+Use the button above to open this repository in Github Codespaces. This will create a new Codespace for you where you can start developing your submission.
+
+### Developing in Dev Containers
 
 A dev container (please find a suitable installation instruction [here](https://code.visualstudio.com/docs/devcontainers/containers)) allows you to directly work in the prepared Docker container so that you do not have to install the dependencies (which can sometimes be a bit tricky).
 
@@ -21,15 +30,27 @@ To develop with dev containers, please:
 
 - Install [VS Code](https://code.visualstudio.com/download) and [Docker](https://docs.docker.com/engine/install/) on your machine
 - Clone this repository: `git clone ...`
+- Install the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VS Code
 - Open the directory `jupyter-notebook-submissions` with VS Code (it should ask you to open the repository in a dev container)
-
-If you do not want to use VS Code, you can start and develop in a jupyter notebook via (please execute the command within the `jupyter-notebook-submissions` directory):
-
-```
-docker run --rm  -it -p 8888:8888 --entrypoint jupyter -w /workspace -v ${PWD}:/workspace fschlatt/natural-language-processing-exercises notebook --allow-root --ip 0.0.0.0
-```
 
 ## Submitting Your Software
 
-Run the github action to submit your software.
+Run the github action to submit your software. Select the Action tab and then select `Upload Docker Software to TIRA` from the list of workflows on the left. Select the `Run workflow` button input the directory of the submission you want to submit. Then select the dataset the submission should be run on and click `Run workflow`. The action will build the docker container, test everything works, and then upload the container to TIRA.
 
+## Additional Hints
+
+Some additional advanced hints for developing your submission:
+
+### Additional dependencies
+
+If you require additional depenedencies, you can add them to the `Dockerfile` in the `dev-container` directory. Next, build the container and push it to Docker Hub. Then change the image in the `.devcontainer.json` file to point to your image.
+
+### Running/Testing your submission locally
+
+You can run it directly via (please install `tira` via `pip3 install tira`, Docker, and Python >= 3.7 on your machine) where you replace `{dataset-name}` with the name of the dataset and `{image-name}` with the name of the image you want to run:
+
+```bash
+tira-run \
+    --input-dataset {dataset-name} \
+    --image {image-name}
+```
