@@ -3,14 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       dockerpath:
-        description: The path to the directory where the Docker image should be build. Should contain a Dockerfile that specifies everything.
+        description: The path to the directory of your submission. Should contain a Dockerfile that executes your code.
         required: true
         default: authorship-verification-trivial
       dataset:
         type: choice
-        description: Dataset.
+        description: Dataset
         options:
-        - authorship-verification-train-20240408-training
+        - authorship-verification-validation-20240408-training
 
 jobs:
   docker-build:
@@ -42,7 +42,7 @@ jobs:
         name: Install required python packages
         run: |
           python -m pip install --upgrade pip
-          pip install tira==0.0.118
+          pip install tira
       -
         name: Set environment variables
         env:
