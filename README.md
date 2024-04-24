@@ -29,9 +29,9 @@ A dev container (please find a suitable installation instruction [here](https://
 To develop with dev containers, please:
 
 - Install [VS Code](https://code.visualstudio.com/download) and [Docker](https://docs.docker.com/engine/install/) on your machine
-- Clone this repository: `git clone ...`
 - Install the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VS Code
-- Open the directory `jupyter-notebook-submissions` with VS Code (it should ask you to open the repository in a dev container)
+- Clone this repository: `git clone ...`
+- Open the repository with VS Code (it should ask you to open the repository in a dev container)
 
 ## Submitting Your Software
 
