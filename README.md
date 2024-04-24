@@ -18,9 +18,9 @@ You have two options for developing your submission. Either you can develop remo
 
 ### Developing in Github Codespaces
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/webis-de/natural-language-processing-exercises)
+Click the `Code` button at the top of the repository and select `Open with Codespaces`. This will open a new Codespace with the repository loaded. You can then start developing your submission in the Codespace.
 
-Use the button above to open this repository in Github Codespaces. This will create a new Codespace for you where you can start developing your submission.
+Additional information on how to use Github Codespaces can be found [here](https://docs.github.com/en/codespaces/).
 
 ### Developing in Dev Containers
 
