@@ -37,7 +37,7 @@ To develop with dev containers, please:
 
 Run the github action to submit your software. Select the Action tab and then select `Upload Docker Software to TIRA` from the list of workflows on the left. Select the `Run workflow` button input the directory of the submission you want to submit. Then select the dataset the submission should be run on and click `Run workflow`. The action will build the docker container, test everything works, and then upload the container to TIRA.
 
-### Persiting Models/Data
+### Persisting Models/Data
 
 Your submission will not have access to the training or validation data when running on Tira. Therefore, anything training you need to do should be done locally and the model persisted in the container. See the `authorship-verification-bayes` directory for an simple example of training a model using scikit learn, saving it to disk, and adding it to the submitted Docker image.
 

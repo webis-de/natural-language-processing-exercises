@@ -5,12 +5,12 @@ on:
       dockerpath:
         description: The path to the directory of your submission. Should contain a Dockerfile that executes your code.
         required: true
-        default: authorship-verification-trivial
       dataset:
         type: choice
         description: Dataset
         options:
         - authorship-verification-validation-20240408-training
+        - language-identification-validation-20240429-training
 
 jobs:
   docker-build:
@@ -64,4 +64,4 @@ jobs:
       - name: Build, test, and upload image
         run: |
           docker build -t ${{ env.IMAGE_TAG }} ${{ github.workspace }}/${{ inputs.dockerpath }}
-          tira-run --input-dataset nlpbuw-fsu-sose-24/authorship-verification-train-20240408-training --image ${{ env.IMAGE_TAG }} --push true --fail-if-output-is-empty
+          tira-run --input-dataset nlpbuw-fsu-sose-24/${{ inputs.dataset }} --image ${{ env.IMAGE_TAG }} --push true --fail-if-output-is-empty
