@@ -11,6 +11,7 @@ on:
         options:
         - authorship-verification-validation-20240408-training
         - language-identification-validation-20240429-training
+        - paraphrase-identification-validation-20240515-training
 
 jobs:
   docker-build:
