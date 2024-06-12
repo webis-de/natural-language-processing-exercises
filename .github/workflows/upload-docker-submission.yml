@@ -13,6 +13,7 @@ on:
         - language-identification-validation-20240429-training
         - paraphrase-identification-validation-20240515-training
         - summarization-validation-20240530-training
+        - ner-validation-20240612-training
 
 jobs:
   docker-build:
